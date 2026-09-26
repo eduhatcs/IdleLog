@@ -1,0 +1,26 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: roteiro-backend
+
+  datasource:
+    url: jdbc:postgresql://localhost:5433/roteiro_db
+    username: postgres
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+    open-in-view: false
+
+# Reservado para o módulo de indicadores/dashboard (RF08-RF11, RN04),
+# que não faz parte deste entregável (cadastros + montagem de roteiro).
+roteiro:
+  jornada-padrao-horas: 8
