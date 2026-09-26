@@ -1,0 +1,17 @@
+# Sobe um Postgres local já com as credenciais usadas em application.yml.
+# Uso: docker compose up -d
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: roteiro-postgres
+    environment:
+      POSTGRES_DB: roteiro_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - roteiro_pgdata:/var/lib/postgresql/data
+
+volumes:
+  roteiro_pgdata:
