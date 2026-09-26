@@ -84,7 +84,9 @@ O projeto segue a especificação de requisitos do trabalho e utiliza o backend 
 
 ## Equipe
 [Diego Henrique Xavier dos Santos](https://github.com/Diego-Hxs)
+
 [Eduardo Henrique Aniceto Teixeira](https://github.com/eduhatcs)
+
 [Marcos Vinicíus Nunes Reis](https://github.com/marcosware)
 
 Projeto acadêmico — Engenharia de Software II — PUC Minas.
