@@ -8,6 +8,7 @@ import com.dto.RoteiroResponse;
 import com.exception.BusinessRuleException;
 import com.exception.ResourceNotFoundException;
 import com.model.Motorista;
+import com.model.Pedido;
 import com.model.Ponto;
 import com.model.Roteiro;
 import com.repository.PontoRepository;
@@ -31,6 +32,7 @@ public class RoteiroService {
     private final RoteiroRepository roteiroRepository;
     private final PontoRepository pontoRepository;
     private final MotoristaService motoristaService;
+    private final PedidoService pedidoService;
 
     public RoteiroResponse criar(RoteiroRequest request) {
         Motorista motorista = motoristaService.buscarEntidade(request.motoristaId());
@@ -83,6 +85,11 @@ public class RoteiroService {
         ponto.setDataHoraChegada(request.dataHoraChegada());
         ponto.setDataHoraSaida(request.dataHoraSaida());
         ponto.setRoteiro(roteiro);
+        if (request.pedidoId() != null) {
+            Pedido pedido = pedidoService.buscarEntidade(request.pedidoId());
+            ponto.setPedido(pedido);
+        }
+        ponto.setTempoParadoMinutos(calcularTempoParado(ponto));
         ponto.setTempoParadoMinutos(calcularTempoParado(ponto));
 
         Ponto salvo = pontoRepository.save(ponto);
@@ -150,7 +157,8 @@ public class RoteiroService {
     }
 
     private PontoResponse toResponse(Ponto p) {
-        return new PontoResponse(p.getId(), p.getEndereco(), p.getLatitude(), p.getLongitude(),
-                p.getOrdem(), p.getDataHoraChegada(), p.getDataHoraSaida(), p.getTempoParadoMinutos());
+    Long pedidoId = p.getPedido() != null ? p.getPedido().getId() : null;
+    return new PontoResponse(p.getId(), p.getEndereco(), p.getLatitude(), p.getLongitude(),
+            p.getOrdem(), p.getDataHoraChegada(), p.getDataHoraSaida(), p.getTempoParadoMinutos(), pedidoId);
     }
 }
