@@ -202,15 +202,22 @@ Esse arquivo serve para documentar o esquema relacional do projeto e também pod
 src/main/java/com/pucminas/roteiro/
 │
 ├── controller/
+│   ├── ClienteController.java
 │   ├── GerenteController.java
 │   ├── MotoristaController.java
+│   ├── PedidoController.java
 │   └── RoteiroController.java
 │
 ├── dto/
+│   ├── ClienteRequest.java
+│   ├── ClienteResponse.java
 │   ├── GerenteRequest.java
 │   ├── GerenteResponse.java
 │   ├── MotoristaRequest.java
 │   ├── MotoristaResponse.java
+│   ├── PedidoRequest.java
+│   ├── PedidoResponse.java
+│   ├── PedidoStatusRequest.java
 │   ├── PontoRequest.java
 │   ├── PontoResponse.java
 │   ├── PontoSaidaRequest.java
@@ -218,20 +225,27 @@ src/main/java/com/pucminas/roteiro/
 │   └── RoteiroResponse.java
 │
 ├── model/
+│   ├── Cliente.java
 │   ├── Gerente.java
 │   ├── Motorista.java
+│   ├── Pedido.java
 │   ├── Ponto.java
-│   └── Roteiro.java
+│   ├── Roteiro.java
+│   └── StatusPedido.java
 │
 ├── repository/
+│   ├── ClienteRepository.java
 │   ├── GerenteRepository.java
 │   ├── MotoristaRepository.java
+│   ├── PedidoRepository.java
 │   ├── PontoRepository.java
 │   └── RoteiroRepository.java
 │
 ├── service/
+│   ├── ClienteService.java
 │   ├── GerenteService.java
 │   ├── MotoristaService.java
+│   ├── PedidoService.java
 │   └── RoteiroService.java
 │
 └── exception/
@@ -301,6 +315,66 @@ curl -X POST http://localhost:8080/api/gerentes \
   }'
 ```
 
+### Clientes
+
+Base:
+
+```text
+/api/clientes
+```
+
+| Método | Endpoint | Função |
+|---|---|---|
+| POST | `/api/clientes` | Cadastrar cliente |
+| GET | `/api/clientes` | Listar clientes |
+| GET | `/api/clientes/{id}` | Buscar cliente |
+| PUT | `/api/clientes/{id}` | Atualizar cliente |
+| DELETE | `/api/clientes/{id}` | Excluir cliente |
+
+Exemplo:
+
+```bash
+curl -X POST http://localhost:8080/api/clientes \
+  -H "Content-Type: application/json" \
+  -d '{
+    "nome": "Ana Pereira",
+    "telefone": "31977776666",
+    "email": "ana@example.com"
+  }'
+```
+
+### Pedidos
+
+Base:
+
+```text
+/api/pedidos
+```
+
+Todo pedido pertence a um cliente já cadastrado (relação "realiza" do diagrama de classes)
+e nasce com status `PENDENTE`.
+
+| Método | Endpoint | Função |
+|---|---|---|
+| POST | `/api/pedidos` | Cadastrar pedido |
+| GET | `/api/pedidos` | Listar pedidos |
+| GET | `/api/pedidos/{id}` | Buscar pedido |
+| PUT | `/api/pedidos/{id}` | Atualizar pedido (cliente, data, endereço) |
+| PATCH | `/api/pedidos/{id}/status` | Atualizar status (`PENDENTE`, `EM_ROTA`, `ENTREGUE`, `CANCELADO`) |
+| DELETE | `/api/pedidos/{id}` | Excluir pedido |
+
+Exemplo:
+
+```bash
+curl -X POST http://localhost:8080/api/pedidos \
+  -H "Content-Type: application/json" \
+  -d '{
+    "clienteId": 1,
+    "data": "2026-09-26",
+    "enderecoEntrega": "Rua Peru, 55"
+  }'
+```
+
 ### Roteiros
 
 Base:
@@ -317,6 +391,10 @@ Base:
 | POST | `/api/roteiros/{id}/pontos` | Adicionar ponto ao roteiro |
 | GET | `/api/roteiros/{id}/pontos` | Listar pontos do roteiro |
 | PATCH | `/api/roteiros/{id}/pontos/{pontoId}/saida` | Registrar saída do ponto |
+
+> `POST /api/roteiros/{id}/pontos` aceita um `pedidoId` opcional, para indicar que aquele ponto
+> é o endereço de entrega de um pedido já cadastrado (relação "endereço de entrega" do diagrama
+> de classes). Sem `pedidoId`, o ponto fica sem pedido associado (ex.: ponto de partida).
 
 Exemplo de criação de roteiro:
 
@@ -446,7 +524,6 @@ Os pontos do roteiro são inseridos em ordem sequencial:
 
 A estrutura do projeto deve receber os próximos recursos previstos na especificação, incluindo:
 
-- clientes e pedidos;
 - parâmetros de custo;
 - jornada padrão de 8 horas;
 - regras parametrizáveis para o cálculo;
@@ -461,4 +538,3 @@ A estrutura do projeto deve receber os próximos recursos previstos na especific
 - O PostgreSQL local utiliza a porta **5433** no host para não depender da porta padrão 5432.
 - O banco é persistido no volume Docker `roteiro_pgdata`.
 - O arquivo `docs/modelo-fisico-dados.sql` é a documentação do modelo físico; para a execução normal, o Hibernate cria/atualiza as tabelas automaticamente.
-
