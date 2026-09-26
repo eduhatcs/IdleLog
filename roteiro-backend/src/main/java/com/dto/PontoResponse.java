@@ -10,5 +10,6 @@ public record PontoResponse(
         Integer ordem,
         LocalDateTime dataHoraChegada,
         LocalDateTime dataHoraSaida,
-        Long tempoParadoMinutos
+        Long tempoParadoMinutos,
+        Long pedidoId
 ) {}
