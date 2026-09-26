@@ -1,6 +1,6 @@
 # MVP Entregadores — Monitoramento de Tempo Parado em Roteiros
 
-Projeto desenvolvido para a disciplina de **Engenharia de Software II — PUC Minas**, com base na especificação do MVP de monitoramento de tempo parado em roteiros.
+Projeto desenvolvido para a disciplina de **Engenharia de Software II — PUC Minas. Ministrado pelo Professor Sandro Laudares**, com base na especificação do MVP de monitoramento de tempo parado em roteiros.
 
 ## Sobre o projeto
 
@@ -83,5 +83,8 @@ Entre as funcionalidades previstas no produto completo estão os cadastros, mont
 O projeto segue a especificação de requisitos do trabalho e utiliza o backend como base para a implementação do MVP. A persistência e o histórico dos roteiros fazem parte do escopo do sistema, assim como os cálculos relacionados ao tempo parado e aos parâmetros definidos para o produto.
 
 ## Equipe
+[Diego Henrique Xavier dos Santos](https://github.com/Diego-Hxs)
+[Eduardo Henrique Aniceto Teixeira](https://github.com/eduhatcs)
+[Marcos Vinicíus Nunes Reis](https://github.com/marcosware)
 
 Projeto acadêmico — Engenharia de Software II — PUC Minas.
