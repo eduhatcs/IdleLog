@@ -12,5 +12,6 @@ public record PontoRequest(
         Double longitude,
         @NotNull @Positive Integer ordem,
         @NotNull LocalDateTime dataHoraChegada,
-        LocalDateTime dataHoraSaida
+        LocalDateTime dataHoraSaida,
+        Long pedidoId
 ) {}
