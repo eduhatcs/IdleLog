@@ -1,4 +1,4 @@
-package com.pucminas.roteiro.exception;
+package com.exception;
 
 public class BusinessRuleException extends RuntimeException {
     public BusinessRuleException(String message) {

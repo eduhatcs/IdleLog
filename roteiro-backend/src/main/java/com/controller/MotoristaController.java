@@ -1,8 +1,8 @@
-package com.pucminas.roteiro.controller;
+package com.controller;
 
-import com.pucminas.roteiro.dto.MotoristaRequest;
-import com.pucminas.roteiro.dto.MotoristaResponse;
-import com.pucminas.roteiro.service.MotoristaService;
+import com.dto.MotoristaRequest;
+import com.dto.MotoristaResponse;
+import com.service.MotoristaService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

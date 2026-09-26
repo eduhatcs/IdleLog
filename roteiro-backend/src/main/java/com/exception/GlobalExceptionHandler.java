@@ -1,4 +1,4 @@
-package com.pucminas.roteiro.exception;
+package com.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

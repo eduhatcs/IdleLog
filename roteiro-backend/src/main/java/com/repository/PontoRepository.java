@@ -1,6 +1,6 @@
-package com.pucminas.roteiro.repository;
+package com.repository;
 
-import com.pucminas.roteiro.model.Ponto;
+import com.model.Ponto;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

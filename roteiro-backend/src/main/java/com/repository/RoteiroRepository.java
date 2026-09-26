@@ -1,6 +1,6 @@
-package com.pucminas.roteiro.repository;
+package com.repository;
 
-import com.pucminas.roteiro.model.Roteiro;
+import com.model.Roteiro;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.time.LocalDate;

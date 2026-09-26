@@ -1,8 +1,8 @@
-package com.pucminas.roteiro.controller;
+package com.controller;
 
-import com.pucminas.roteiro.dto.GerenteRequest;
-import com.pucminas.roteiro.dto.GerenteResponse;
-import com.pucminas.roteiro.service.GerenteService;
+import com.dto.GerenteRequest;
+import com.dto.GerenteResponse;
+import com.service.GerenteService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

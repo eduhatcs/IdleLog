@@ -1,11 +1,11 @@
-package com.pucminas.roteiro.controller;
+package com.controller;
 
-import com.pucminas.roteiro.dto.PontoRequest;
-import com.pucminas.roteiro.dto.PontoResponse;
-import com.pucminas.roteiro.dto.PontoSaidaRequest;
-import com.pucminas.roteiro.dto.RoteiroRequest;
-import com.pucminas.roteiro.dto.RoteiroResponse;
-import com.pucminas.roteiro.service.RoteiroService;
+import com.dto.PontoRequest;
+import com.dto.PontoResponse;
+import com.dto.PontoSaidaRequest;
+import com.dto.RoteiroRequest;
+import com.dto.RoteiroResponse;
+import com.service.RoteiroService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;

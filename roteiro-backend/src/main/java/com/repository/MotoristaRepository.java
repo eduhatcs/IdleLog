@@ -1,6 +1,6 @@
-package com.pucminas.roteiro.repository;
+package com.repository;
 
-import com.pucminas.roteiro.model.Motorista;
+import com.model.Motorista;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface MotoristaRepository extends JpaRepository<Motorista, Long> {

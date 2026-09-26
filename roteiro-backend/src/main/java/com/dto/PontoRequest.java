@@ -1,4 +1,4 @@
-package com.pucminas.roteiro.dto;
+package com.dto;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

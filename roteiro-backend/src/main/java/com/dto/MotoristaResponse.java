@@ -1,4 +1,4 @@
-package com.pucminas.roteiro.dto;
+package com.dto;
 
 public record MotoristaResponse(
         Long id,

@@ -1,11 +1,11 @@
-package com.pucminas.roteiro.service;
+package com.service;
 
-import com.pucminas.roteiro.dto.MotoristaRequest;
-import com.pucminas.roteiro.dto.MotoristaResponse;
-import com.pucminas.roteiro.exception.BusinessRuleException;
-import com.pucminas.roteiro.exception.ResourceNotFoundException;
-import com.pucminas.roteiro.model.Motorista;
-import com.pucminas.roteiro.repository.MotoristaRepository;
+import com.dto.MotoristaRequest;
+import com.dto.MotoristaResponse;
+import com.exception.BusinessRuleException;
+import com.exception.ResourceNotFoundException;
+import com.model.Motorista;
+import com.repository.MotoristaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;

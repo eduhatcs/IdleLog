@@ -1,4 +1,4 @@
-package com.pucminas.roteiro.exception;
+package com.exception;
 
 public class ResourceNotFoundException extends RuntimeException {
     public ResourceNotFoundException(String message) {

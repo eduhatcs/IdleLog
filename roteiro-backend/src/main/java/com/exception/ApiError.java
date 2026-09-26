@@ -1,4 +1,4 @@
-package com.pucminas.roteiro.exception;
+package com.exception;
 
 import java.time.Instant;
 import java.util.List;

@@ -1,4 +1,4 @@
-package com.pucminas.roteiro.model;
+package com.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
