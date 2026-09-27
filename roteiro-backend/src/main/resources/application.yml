@@ -14,11 +14,17 @@ spring:
   jpa:
     hibernate:
       ddl-auto: update
+    defer-datasource-initialization: true
     show-sql: true
     properties:
       hibernate:
         format_sql: true
     open-in-view: false
+
+  sql:
+    init:
+      mode: always
+      data-locations: classpath:dados-demo.sql
 
 # Reservado para o módulo de indicadores/dashboard (RF08-RF11, RN04),
 # que não faz parte deste entregável (cadastros + montagem de roteiro).
