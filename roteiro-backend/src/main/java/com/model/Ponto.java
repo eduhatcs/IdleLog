@@ -59,4 +59,13 @@ public class Ponto {
     @JoinColumn(name = "roteiro_id", nullable = false)
     @JsonIgnore
     private Roteiro roteiro;
+
+    /**
+     * Pedido cujo endereço de entrega este ponto representa (opcional).
+     * Relação "endereço de entrega" do diagrama de classes: Pedido 1 -- 0..1 Ponto.
+     * Nulo quando o ponto não corresponde a um pedido específico (ex.: ponto de partida).
+     */
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "pedido_id")
+    private Pedido pedido;
 }

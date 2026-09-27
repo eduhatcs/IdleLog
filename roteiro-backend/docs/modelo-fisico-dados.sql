@@ -1,7 +1,7 @@
 -- =====================================================================
 -- Modelo Físico de Dados — MVP Monitoramento de Tempo Parado em Roteiros
--- Derivado do diagrama de classes conceitual (Motorista, Gerente,
--- Roteiro, Ponto) descrito na especificação de requisitos.
+-- Derivado do diagrama de classes conceitual (Cliente, Motorista, Gerente,
+-- Pedido, Roteiro, Ponto) descrito na especificação de requisitos.
 --
 -- Este script é DOCUMENTAÇÃO do modelo físico para o entregável da
 -- disciplina. Em tempo de execução, o Hibernate já cria/atualiza este
@@ -10,6 +10,14 @@
 -- funcionar — mas pode ser usado para inspecionar ou recriar o banco
 -- do zero em outro ambiente.
 -- =====================================================================
+
+CREATE TABLE cliente (
+    id          BIGSERIAL PRIMARY KEY,
+    nome        VARCHAR(120) NOT NULL,
+    telefone    VARCHAR(20)  NOT NULL,
+    email       VARCHAR(120) NOT NULL,
+    CONSTRAINT uk_cliente_email UNIQUE (email)
+);
 
 CREATE TABLE motorista (
     id                     BIGSERIAL PRIMARY KEY,
@@ -29,6 +37,15 @@ CREATE TABLE gerente (
     CONSTRAINT uk_gerente_email UNIQUE (email)
 );
 
+-- Relação "realiza" do diagrama de classes: Cliente 1 -- 0..* Pedido.
+CREATE TABLE pedido (
+    id                  BIGSERIAL PRIMARY KEY,
+    data                DATE NOT NULL,
+    endereco_entrega    VARCHAR(200) NOT NULL,
+    status              VARCHAR(20) NOT NULL DEFAULT 'PENDENTE',
+    cliente_id          BIGINT NOT NULL REFERENCES cliente (id)
+);
+
 -- RN05: cada roteiro pertence a um único motorista e a uma única data
 -- (constraint uk_roteiro_motorista_data garante 1 roteiro por motorista/dia).
 CREATE TABLE roteiro (
@@ -43,6 +60,8 @@ CREATE TABLE roteiro (
 -- RN06: os pontos de um roteiro possuem ordem sequencial (1, 2, 3, 4...)
 -- (constraint uk_ponto_roteiro_ordem garante que não há ordem repetida no mesmo roteiro).
 -- RN01/RN02: tempo_parado_minutos é calculado pela aplicação (nulo para ordem = 1).
+-- pedido_id é opcional: relação "endereço de entrega" do diagrama de classes
+-- (Pedido 1 -- 0..1 Ponto) — nulo quando o ponto não representa um pedido específico.
 CREATE TABLE ponto (
     id                      BIGSERIAL PRIMARY KEY,
     endereco                VARCHAR(200) NOT NULL,
@@ -53,8 +72,12 @@ CREATE TABLE ponto (
     data_hora_saida         TIMESTAMP,
     tempo_parado_minutos    BIGINT,
     roteiro_id              BIGINT NOT NULL REFERENCES roteiro (id) ON DELETE CASCADE,
+    pedido_id               BIGINT REFERENCES pedido (id),
     CONSTRAINT uk_ponto_roteiro_ordem UNIQUE (roteiro_id, ordem)
 );
 
+CREATE INDEX ix_pedido_cliente ON pedido (cliente_id);
 CREATE INDEX ix_roteiro_motorista ON roteiro (motorista_id);
 CREATE INDEX ix_ponto_roteiro ON ponto (roteiro_id);
+CREATE INDEX ix_ponto_pedido ON ponto (pedido_id);
+
