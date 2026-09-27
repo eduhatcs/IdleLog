@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MVP Entregadores</title>
+  <style>
+    body { font-family: Arial, sans-serif; margin: 0; background: #f5f7fb; color: #1f2937; }
+    header { background: #0f172a; color: white; padding: 24px 32px; }
+    main { max-width: 1200px; margin: 24px auto; padding: 0 20px; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 16px; margin-bottom: 24px; }
+    .card { background: white; border-radius: 12px; padding: 18px; box-shadow: 0 2px 8px rgba(0,0,0,.08); }
+    .number { font-size: 30px; font-weight: 700; margin-top: 8px; }
+    section { background: white; border-radius: 12px; padding: 18px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,.08); overflow-x: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 650px; }
+    th, td { text-align: left; padding: 10px; border-bottom: 1px solid #e5e7eb; }
+    th { background: #f8fafc; }
+    .error { color: #b91c1c; padding: 12px 0; }
+    .loading { color: #475569; }
+  </style>
+</head>
+<body>
+<header>
+  <h1>MVP Entregadores</h1>
+  <div>Sistema de Monitoramento de Tempo Parado em Roteiros</div>
+</header>
+
+<main>
+  <div id="status" class="loading">Carregando dados...</div>
+
+  <div class="grid">
+    <div class="card"><div>Clientes</div><div class="number" id="count-clientes">-</div></div>
+    <div class="card"><div>Motoristas</div><div class="number" id="count-motoristas">-</div></div>
+    <div class="card"><div>Gerentes</div><div class="number" id="count-gerentes">-</div></div>
+    <div class="card"><div>Pedidos</div><div class="number" id="count-pedidos">-</div></div>
+    <div class="card"><div>Roteiros</div><div class="number" id="count-roteiros">-</div></div>
+  </div>
+
+  <section>
+    <h2>Motoristas</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Nome</th><th>Telefone</th><th>Veículo</th><th>Km/L</th></tr></thead>
+      <tbody id="motoristas"></tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Gerentes</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Nome</th><th>Telefone</th><th>E-mail</th></tr></thead>
+      <tbody id="gerentes"></tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Clientes</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Nome</th><th>Telefone</th><th>E-mail</th></tr></thead>
+      <tbody id="clientes"></tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Pedidos</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Cliente</th><th>Data</th><th>Endereço</th><th>Status</th></tr></thead>
+      <tbody id="pedidos"></tbody>
+    </table>
+  </section>
+
+  <section>
+    <h2>Roteiros</h2>
+    <table>
+      <thead><tr><th>ID</th><th>Data</th><th>Motorista</th><th>Distância (km)</th><th>Tempo parado (min)</th><th>Pontos</th></tr></thead>
+      <tbody id="roteiros"></tbody>
+    </table>
+  </section>
+</main>
+
+<script>
+async function getJson(url) {
+  const response = await fetch(url);
+  if (!response.ok) throw new Error(url + " -> HTTP " + response.status);
+  return response.json();
+}
+
+function cell(value) {
+  const td = document.createElement("td");
+  td.textContent = value ?? "";
+  return td;
+}
+
+function fillTable(id, rows, mapper) {
+  const tbody = document.getElementById(id);
+  tbody.replaceChildren();
+  rows.forEach(item => {
+    const tr = document.createElement("tr");
+    mapper(item).forEach(value => tr.appendChild(cell(value)));
+    tbody.appendChild(tr);
+  });
+}
+
+async function load() {
+  try {
+    const [clientes, motoristas, gerentes, pedidos, roteiros] = await Promise.all([
+      getJson("/api/clientes"),
+      getJson("/api/motoristas"),
+      getJson("/api/gerentes"),
+      getJson("/api/pedidos"),
+      getJson("/api/roteiros")
+    ]);
+
+    document.getElementById("count-clientes").textContent = clientes.length;
+    document.getElementById("count-motoristas").textContent = motoristas.length;
+    document.getElementById("count-gerentes").textContent = gerentes.length;
+    document.getElementById("count-pedidos").textContent = pedidos.length;
+    document.getElementById("count-roteiros").textContent = roteiros.length;
+
+    fillTable("clientes", clientes, c => [c.id, c.nome, c.telefone, c.email]);
+    fillTable("motoristas", motoristas, m => [m.id, m.nome, m.telefone, m.veiculo, m.rendimentoKmLitro]);
+    fillTable("gerentes", gerentes, g => [g.id, g.nome, g.telefone, g.email]);
+    fillTable("pedidos", pedidos, p => [p.id, p.clienteNome, p.data, p.enderecoEntrega, p.status]);
+    fillTable("roteiros", roteiros, r => [
+      r.id, r.data, r.motoristaNome,
+      r.distanciaTotalKm ?? 0,
+      r.tempoTotalParadoMinutos ?? 0,
+      (r.pontos || []).length
+    ]);
+
+    document.getElementById("status").textContent = "Dados carregados com sucesso.";
+  } catch (error) {
+    console.error(error);
+    document.getElementById("status").innerHTML =
+      '<div class="error">Não foi possível carregar os dados da API. Verifique se o banco e o Spring Boot estão em execução.</div>';
+  }
+}
+
+load();
+</script>
+</body>
+</html>
