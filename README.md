@@ -1,10 +1,10 @@
-# MVP Entregadores — Monitoramento de Tempo Parado em Roteiros
+# IdleLog
 
 Projeto desenvolvido para a disciplina de **Engenharia de Software II — PUC Minas. Ministrado pelo Professor Sandro Laudares**, com base na especificação do MVP de monitoramento de tempo parado em roteiros.
 
 ## Sobre o projeto
 
-O sistema tem como objetivo registrar os roteiros realizados por motoristas/motoboys e identificar quanto tempo o profissional permanece parado em cada ponto do trajeto.
+O sistema IdleLog tem como objetivo registrar os roteiros realizados por motoristas/motoboys e identificar quanto tempo o profissional permanece parado em cada ponto do trajeto.
 
 O domínio do projeto contempla:
 
@@ -77,6 +77,7 @@ Entre as funcionalidades previstas no produto completo estão os cadastros, mont
 
 - [Backend — requisitos e execução](./roteiro-backend/README.md)
 - [Modelo físico do banco](./roteiro-backend/docs/modelo-fisico-dados.sql)
+- [Frontend](./roteiro-frontend/README.md)
 
 ## Relação com a especificação
 
