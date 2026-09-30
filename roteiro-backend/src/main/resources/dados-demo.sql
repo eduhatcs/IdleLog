@@ -7,7 +7,10 @@
 -- de demonstração. Use em ambiente de desenvolvimento/teste.
 -- ================================================================
 
-TRUNCATE TABLE ponto, roteiro, pedido, gerente, motorista, cliente RESTART IDENTITY CASCADE;
+TRUNCATE TABLE ponto, roteiro, pedido, gerente, motorista, cliente, parametrizacao RESTART IDENTITY CASCADE;
+
+INSERT INTO parametrizacao (preco_combustivel, km_por_litro_padrao, jornada_maxima_horas, custo_hora_parada)
+VALUES (5.89, 12.00, 8.00, 25.00);
 
 -- ================================================================
 -- 1. CLIENTE (5 exemplos)

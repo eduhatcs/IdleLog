@@ -17,6 +17,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -31,7 +32,7 @@ public class ParametrizacaoService {
         this.roteiroRepository = roteiroRepository;
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public Parametrizacao getParametrizacaoAtual() {
         List<Parametrizacao> lista = parametrizacaoRepository.findAll();
         if (!lista.isEmpty()) {
@@ -47,7 +48,7 @@ public class ParametrizacaoService {
         return parametrizacaoRepository.save(padrao);
     }
 
-    @Transactional(readOnly = true)
+    @Transactional
     public ParametrizacaoResponse buscarParametrizacao() {
         return toResponse(getParametrizacaoAtual());
     }
@@ -69,7 +70,7 @@ public class ParametrizacaoService {
     /**
      * RN07: Cálculo de custo e análise de jornada do roteiro
      */
-    @Transactional(readOnly = true)
+    @Transactional
     public CustoRoteiroResponse calcularCustoRoteiro(Long roteiroId) {
         Roteiro roteiro = roteiroRepository.findById(roteiroId)
                 .orElseThrow(() -> new ResourceNotFoundException("Roteiro não encontrado com id: " + roteiroId));
@@ -109,7 +110,7 @@ public class ParametrizacaoService {
 
         // Validação de jornada de trabalho (duração total entre primeiro e último ponto)
         boolean jornadaExcedida = false;
-        List<Ponto> pontos = roteiro.getPontos();
+        List<Ponto> pontos = new ArrayList<>(roteiro.getPontos());
         if (pontos != null && pontos.size() >= 2) {
             pontos.sort(Comparator.comparingInt(Ponto::getOrdem));
             LocalDateTime inicio = pontos.get(0).getDataHoraChegada();
