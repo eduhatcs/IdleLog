@@ -28,12 +28,20 @@ MVP-Entregadores/
 │
 ├── README.md                 # Visão geral do projeto
 │
-└── roteiro-backend/          # Backend REST em Java/Spring Boot
+└── roteiro-backend/          # Backend REST em Java/Spring Boot, Spring Data
     ├── src/
     ├── docs/
     ├── pom.xml
     ├── docker-compose.yml
     └── README.md             # Requisitos e como executar o backend
+└── roteiro-frontend/         # Frontend em React 18, Vite, React Router, Recharts
+    └── src/
+    ├── .gitignore
+    ├── README.md             # Requisitos e como executar o frontend
+    ├── index.html
+    ├── package-lock.json
+    ├── package-json
+    └── vite.config.js
 ```
 
 ## Backend
@@ -65,6 +73,34 @@ roteiro-backend/
     ├── repository/       # Persistência com Spring Data JPA
     ├── service/          # Regras de negócio
     └── exception/        # Tratamento de erros da API
+```
+
+## Frontend
+
+O frontend está localizado em [`roteiro-frontend/`](./roteiro-frontend/).
+
+Interface web responsiva do MVP de monitoramento de tempo parado em roteiros. 
+
+### Tecnologias
+- React 18
+- Vite
+- React Router
+- Recharts
+
+### Organização do frontend
+
+```text
+roteiro-frontend/
+└── src
+    ├── components/       
+    ├── pages/              
+    ├── App.jsx            
+    ├── api.js       
+    ├── auth.jsx          
+    ├── hooks.js
+    ├── main.jsx
+    ├── styles.cssEu te amo
+    └── util.js         
 ```
 
 ## Escopo do MVP
