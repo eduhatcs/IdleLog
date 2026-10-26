@@ -1,0 +1,55 @@
+# Blueprint do Render para publicar a API Spring Boot + PostgreSQL.
+#
+# Como usar:
+#   1. Acesse https://dashboard.render.com/blueprints
+#   2. New Blueprint Instance -> conecte o repositório eduhatcs/IdleLog
+#   3. Confirme a criação dos recursos "idlelog-api" e "idlelog-db"
+#
+# O nome do serviço abaixo ("idlelog-api") define a URL pública
+# https://idlelog-api.onrender.com, que é o valor de VITE_API_URL no
+# workflow do GitHub Pages.
+services:
+  - type: web
+    name: idlelog-api
+    runtime: docker
+    plan: free
+    region: oregon
+    rootDir: roteiro-backend
+    dockerfilePath: ./Dockerfile
+    healthCheckPath: /api/gerentes
+    envVars:
+      - key: DB_HOST
+        fromDatabase:
+          name: idlelog-db
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: idlelog-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: idlelog-db
+          property: database
+      - key: DB_USER
+        fromDatabase:
+          name: idlelog-db
+          property: user
+      - key: DB_PASSWORD
+        fromDatabase:
+          name: idlelog-db
+          property: password
+      - key: APP_CORS_ALLOWED_ORIGINS
+        value: https://eduhatcs.github.io
+      - key: APP_SEED_DEMO_DATA
+        value: "true"
+      - key: SPRING_JPA_SHOW_SQL
+        value: "false"
+      - key: JAVA_TOOL_OPTIONS
+        value: -XX:MaxRAMPercentage=75.0
+
+databases:
+  - name: idlelog-db
+    plan: free
+    region: oregon
+    postgresMajorVersion: "16"
+    databaseName: roteiro_db

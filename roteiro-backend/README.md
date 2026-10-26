@@ -170,10 +170,15 @@ server:
 
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5433/roteiro_db
-    username: postgres
-    password: postgres
+    url: "${SPRING_DATASOURCE_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:roteiro_db}}"
+    username: "${SPRING_DATASOURCE_USERNAME:${DB_USER:postgres}}"
+    password: "${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:postgres}}"
 ```
+
+Os valores padrão são os do `docker-compose.yml` local. Em produção, defina `DB_HOST`, `DB_PORT`,
+`DB_NAME`, `DB_USER` e `DB_PASSWORD` (o Render preenche essas variáveis automaticamente pelo
+[`render.yaml`](../render.yaml)) ou sobrescreva diretamente `SPRING_DATASOURCE_URL`,
+`SPRING_DATASOURCE_USERNAME` e `SPRING_DATASOURCE_PASSWORD`.
 
 O Hibernate está configurado com:
 
@@ -185,6 +190,19 @@ spring:
 ```
 
 Isso significa que, ao iniciar a aplicação, o Hibernate cria/atualiza as tabelas de acordo com as entidades JPA. Portanto, **não é necessário executar manualmente o arquivo SQL para iniciar o projeto**.
+
+### Dados de demonstração
+
+O `DemoDataSeeder` executa `src/main/resources/dados-demo.sql` **somente quando o banco está vazio**
+(nenhum cliente, motorista, gerente, pedido ou roteiro cadastrado). Nas inicializações seguintes os
+dados existentes são preservados — importante em produção, já que o script começa com `TRUNCATE`.
+
+Para desativar a carga inicial:
+
+```bash
+APP_SEED_DEMO_DATA=false mvn spring-boot:run
+```
+
 
 ## CORS (acesso pelo frontend)
 
@@ -222,6 +240,32 @@ curl -i -X OPTIONS https://sua-api-publica.com/api/gerentes \
 ```
 
 A resposta deve conter `Access-Control-Allow-Origin: https://eduhatcs.github.io`.
+
+## Deploy no Render
+
+O deploy é feito por **Blueprint** a partir do [`render.yaml`](../render.yaml) na raiz do repositório:
+
+1. Acesse **https://dashboard.render.com/blueprints** → **New Blueprint Instance**.
+2. Selecione o repositório `eduhatcs/IdleLog`.
+3. Confirme a criação de:
+   - `idlelog-api` — web service Docker definido por `Dockerfile` (plano free);
+   - `idlelog-db` — PostgreSQL 16 (plano free).
+4. Após o deploy, a API responde em `https://idlelog-api.onrender.com` (health check em
+   `/api/gerentes`).
+
+Variáveis configuradas pelo `render.yaml`:
+
+| Variável | Origem/valor |
+|---|---|
+| `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD` | referências ao banco `idlelog-db` |
+| `APP_CORS_ALLOWED_ORIGINS` | `https://eduhatcs.github.io` |
+| `APP_SEED_DEMO_DATA` | `true` (popula o banco somente se estiver vazio) |
+| `SPRING_JPA_SHOW_SQL` | `false` |
+| `JAVA_TOOL_OPTIONS` | `-XX:MaxRAMPercentage=75.0` |
+
+> O plano gratuito do Render suspende o serviço após 15 minutos sem tráfego (a primeira chamada pode
+> demorar ~1 minuto) e o PostgreSQL gratuito expira após 30 dias. Para mais prazo, aponte as variáveis
+> `DB_*` para um PostgreSQL gratuito externo (Neon, Supabase) ou use um plano pago do Render.
 
 ## Modelo físico do banco
 

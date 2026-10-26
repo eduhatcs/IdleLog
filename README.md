@@ -96,10 +96,32 @@ O workflow executa `npm ci` e `npm run build` em `roteiro-frontend/`, publica ap
 e gera um `404.html` para que rotas como `/IdleLog/roteiros` também abram a aplicação (fallback de SPA).
 
 > **Importante:** o GitHub Pages hospeda somente arquivos estáticos. O backend Spring Boot e o PostgreSQL
-> precisam ser publicados separadamente (por exemplo, Render, Railway ou Fly.io). Para conectar o site a esse
-> backend, cadastre a variável `VITE_API_URL` em **Settings > Secrets and variables > Actions > Variables**
-> com a URL pública da API (ex.: `https://minha-api.onrender.com`). Sem isso, a tela de login abre, mas não
-> consegue carregar gerentes/motoristas. O backend também precisa liberar CORS para o domínio do GitHub Pages.
+> precisam ser publicados separadamente. Para conectar o site a esse backend, cadastre a variável
+> `VITE_API_URL` em **Settings > Secrets and variables > Actions > Variables** com a URL pública da API
+> (ex.: `https://idlelog-api.onrender.com`). Sem isso, a tela de login abre, mas não consegue carregar
+> gerentes/motoristas. O backend também precisa liberar CORS para o domínio do GitHub Pages.
+
+### Backend publicado (Render)
+
+[![Deploy to Render](https://render.com/images/deploy-to-render-button.svg)](https://render.com/deploy?repo=https://github.com/eduhatcs/IdleLog)
+
+O arquivo [`render.yaml`](./render.yaml) na raiz define, via **Blueprint**, a API Spring Boot
+(`idlelog-api`, em Docker) e o PostgreSQL (`idlelog-db`) no Render. O botão acima (ou
+**https://dashboard.render.com/blueprints** → **New Blueprint Instance**) cria os dois recursos:
+
+1. Conecte o repositório `eduhatcs/IdleLog` e confirme os recursos `idlelog-api` e `idlelog-db`.
+2. Aguarde o primeiro deploy. A API ficará em **https://idlelog-api.onrender.com**
+   (se o nome do serviço mudar, atualize a variável `VITE_API_URL` no GitHub e rode o workflow novamente).
+
+O `roteiro-backend/Dockerfile` compila o projeto com Maven e executa o JAR em Java 17. O banco é
+populado com os dados de demonstração **apenas na primeira inicialização**, quando está vazio
+(depois disso, os dados criados pelos usuários são preservados).
+
+> O plano gratuito do Render coloca o serviço em suspensão após 15 minutos sem acesso (a primeira
+> requisição pode levar ~1 minuto) e o PostgreSQL gratuito expira **30 dias após a criação**. Para uma
+> demonstração rápida isso é suficiente; para manter o site no ar por mais tempo, use um PostgreSQL
+> gratuito externo (Neon, Supabase) ou mude o banco para um plano pago.
+
 
 ### Tecnologias
 - React 18

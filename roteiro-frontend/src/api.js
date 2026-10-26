@@ -1,6 +1,9 @@
 // Camada única de acesso à API REST do Spring Boot.
 const BASE = import.meta.env.VITE_API_URL ?? '';
 
+// Exposto para mensagens de erro: mostra para qual API o site está tentando ir.
+export const API_BASE = BASE;
+
 async function request(path, options = {}) {
   const res = await fetch(BASE + path, {
     headers: { 'Content-Type': 'application/json' },
