@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { api } from '../api.js';
 import { useAsync } from '../hooks.js';
 import { Alert, Empty, Field, Loading, PageHeader, Panel } from '../components/ui.jsx';
@@ -52,6 +52,9 @@ export default function Cadastros({ tipo }) {
 }
 
 function CadastroCrud({ tipo, cfg }) {
+  useEffect(() => {
+    alert('AVISO: Não colocar dados pessoais verdadeiros!');
+  }, []);
   const { data, loading, error, reload } = useAsync(() => api.list(tipo), [tipo]);
   const [form, setForm] = useState(vazio(cfg.campos));
   const [editId, setEditId] = useState(null);
