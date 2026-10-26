@@ -166,7 +166,7 @@ Atualmente:
 
 ```yaml
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 spring:
   datasource:
@@ -185,6 +185,43 @@ spring:
 ```
 
 Isso significa que, ao iniciar a aplicação, o Hibernate cria/atualiza as tabelas de acordo com as entidades JPA. Portanto, **não é necessário executar manualmente o arquivo SQL para iniciar o projeto**.
+
+## CORS (acesso pelo frontend)
+
+O frontend em `https://eduhatcs.github.io/IdleLog/` roda em uma origem diferente da API. Por isso o
+navegador exige que o backend autorize essa origem via CORS.
+
+A configuração fica em `src/main/java/com/config/CorsConfig.java` e as origens permitidas em
+`src/main/resources/application.yml`:
+
+```yaml
+app:
+  cors:
+    allowed-origins:
+      - http://localhost:5173
+      - http://localhost:4173
+      - https://eduhatcs.github.io
+```
+
+Em produção, sobrescreva pela variável de ambiente `APP_CORS_ALLOWED_ORIGINS` (valores separados por
+vírgula). Informe apenas esquema + host, **sem caminho e sem barra no final**:
+
+```bash
+APP_CORS_ALLOWED_ORIGINS=https://eduhatcs.github.io,http://localhost:5173
+```
+
+A configuração libera `/api/**` para os métodos `GET`, `POST`, `PUT`, `PATCH`, `DELETE` e `OPTIONS`
+(preflight). Não é necessário anotar cada controller com `@CrossOrigin`.
+
+Para testar o preflight:
+
+```bash
+curl -i -X OPTIONS https://sua-api-publica.com/api/gerentes \
+  -H "Origin: https://eduhatcs.github.io" \
+  -H "Access-Control-Request-Method: GET"
+```
+
+A resposta deve conter `Access-Control-Allow-Origin: https://eduhatcs.github.io`.
 
 ## Modelo físico do banco
 
