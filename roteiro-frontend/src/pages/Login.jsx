@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { api } from '../api.js';
+import { api, API_BASE } from '../api.js';
 import { useAuth } from '../auth.jsx';
 import { useAsync } from '../hooks.js';
 import { Alert, Field } from '../components/ui.jsx';
@@ -9,7 +9,7 @@ export default function Login() {
   const [perfil, setPerfil] = useState('GERENTE');
   const [pessoaId, setPessoaId] = useState('');
   const recurso = perfil === 'GERENTE' ? 'gerentes' : 'motoristas';
-  const { data: pessoas, error, loading } = useAsync(() => api.list(recurso), [recurso]);
+  const { data: pessoas, error, loading, reload } = useAsync(() => api.list(recurso), [recurso]);
 
   const submit = (e) => {
     e.preventDefault();
@@ -39,7 +39,16 @@ export default function Login() {
           </select>
         </Field>
 
-        <Alert>{error && 'Não foi possível falar com a API. Verifique se o banco e o Spring Boot estão rodando (porta 8080).'}</Alert>
+        <Alert>
+          {error && (
+            <>
+              Não foi possível falar com a API
+              {API_BASE ? ` em ${API_BASE}` : ' (VITE_API_URL não configurada no build)'}.
+              {' '}Detalhe: {error}.{' '}
+              <button type="button" className="link" onClick={reload}>Tentar novamente</button>
+            </>
+          )}
+        </Alert>
         <button className="btn primary" disabled={!pessoaId}>Entrar</button>
         <small className="muted">Acesso simulado para o MVP: ainda não há senha nem login no backend.</small>
       </form>

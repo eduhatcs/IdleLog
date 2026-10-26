@@ -7,25 +7,31 @@ spring:
     name: roteiro-backend
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/roteiro_db
-    username: postgres
-    password: postgres
+    # Local (docker compose): jdbc:postgresql://localhost:5433/roteiro_db
+    # Render: as variáveis DB_HOST/DB_PORT/DB_NAME/DB_USER/DB_PASSWORD são
+    # preenchidas pelo render.yaml a partir do banco "idlelog-db".
+    url: "${SPRING_DATASOURCE_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5433}/${DB_NAME:roteiro_db}}"
+    username: "${SPRING_DATASOURCE_USERNAME:${DB_USER:postgres}}"
+    password: "${SPRING_DATASOURCE_PASSWORD:${DB_PASSWORD:postgres}}"
     driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: 5
 
   jpa:
     hibernate:
       ddl-auto: update
-    defer-datasource-initialization: true
-    show-sql: true
+    show-sql: ${SPRING_JPA_SHOW_SQL:true}
     properties:
       hibernate:
         format_sql: true
     open-in-view: false
 
+  # O script dados-demo.sql contém TRUNCATE e não pode rodar a cada start
+  # (isso apagaria os dados criados pelos usuários). Quem popula o banco é o
+  # DemoDataSeeder, apenas quando não há nenhum dado cadastrado.
   sql:
     init:
-      mode: always
-      data-locations: classpath:dados-demo.sql
+      mode: never
 
 # Origens autorizadas a chamar a API pelo navegador (CORS).
 # Em produção, prefira sobrescrever pela variável de ambiente
@@ -36,6 +42,9 @@ app:
       - http://localhost:5173
       - http://localhost:4173
       - https://eduhatcs.github.io
+  # Insere os dados de demonstração somente se o banco estiver vazio.
+  # Use APP_SEED_DEMO_DATA=false para desativar.
+  seed-demo-data: ${APP_SEED_DEMO_DATA:true}
 
 # Reservado para o módulo de indicadores/dashboard (RF08-RF11, RN04),
 # que não faz parte deste entregável (cadastros + montagem de roteiro).
