@@ -81,6 +81,26 @@ O frontend está localizado em [`roteiro-frontend/`](./roteiro-frontend/).
 
 Interface web responsiva do MVP de monitoramento de tempo parado em roteiros. 
 
+### Frontend publicado (GitHub Pages)
+
+O frontend é publicado automaticamente em **https://eduhatcs.github.io/IdleLog/** pelo workflow
+[`.github/workflows/deploy-pages.yml`](./.github/workflows/deploy-pages.yml) a cada push na branch `main`.
+Ao acessar essa URL, a aplicação React abre diretamente na tela de login (a primeira tela de interação com o usuário).
+
+Configuração necessária uma única vez no GitHub:
+
+1. Acesse **Settings > Pages**.
+2. Em **Build and deployment > Source**, selecione **GitHub Actions**.
+
+O workflow executa `npm ci` e `npm run build` em `roteiro-frontend/`, publica apenas o conteúdo de `dist/`
+e gera um `404.html` para que rotas como `/IdleLog/roteiros` também abram a aplicação (fallback de SPA).
+
+> **Importante:** o GitHub Pages hospeda somente arquivos estáticos. O backend Spring Boot e o PostgreSQL
+> precisam ser publicados separadamente (por exemplo, Render, Railway ou Fly.io). Para conectar o site a esse
+> backend, cadastre a variável `VITE_API_URL` em **Settings > Secrets and variables > Actions > Variables**
+> com a URL pública da API (ex.: `https://minha-api.onrender.com`). Sem isso, a tela de login abre, mas não
+> consegue carregar gerentes/motoristas. O backend também precisa liberar CORS para o domínio do GitHub Pages.
+
 ### Tecnologias
 - React 18
 - Vite
@@ -99,7 +119,7 @@ roteiro-frontend/
     ├── auth.jsx          
     ├── hooks.js
     ├── main.jsx
-    ├── styles.cssEu te amo
+    ├── styles.css
     └── util.js         
 ```
 

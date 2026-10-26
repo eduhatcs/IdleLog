@@ -17,9 +17,16 @@ Acesse http://localhost:5173. O Vite encaminha `/api` para `localhost:8080` (ver
 
 ## Produção
 
-`npm run build` gera `dist/`. Para o Spring Boot servir o frontend, copie o conteúdo de `dist/` para
+`npm run build` gera `dist/` já com o base path `/IdleLog/`, adequado ao GitHub Pages do repositório.
+Além do `index.html`, o script de build cria `dist/404.html` para o fallback das rotas do React Router.
+
+O deploy é automático pelo workflow `.github/workflows/deploy-pages.yml` a cada push na `main`:
+https://eduhatcs.github.io/IdleLog/
+
+Para o Spring Boot servir o frontend na mesma origem, copie o conteúdo de `dist/` para
 `roteiro-backend/src/main/resources/static/` (substitui o `index.html` antigo). Se a API estiver em outro
-host, defina `VITE_API_URL` antes do build.
+host, defina `VITE_API_URL` antes do build (no GitHub, como variável de Actions). Nesse caso o backend
+precisa permitir CORS para `https://<usuario>.github.io`.
 
 ## Telas
 
