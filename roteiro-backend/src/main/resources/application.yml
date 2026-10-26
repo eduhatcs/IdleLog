@@ -1,5 +1,6 @@
 server:
-  port: 8080
+  # Em serviços como Render/Railway, a plataforma define PORT.
+  port: ${PORT:8080}
 
 spring:
   application:
@@ -25,6 +26,16 @@ spring:
     init:
       mode: always
       data-locations: classpath:dados-demo.sql
+
+# Origens autorizadas a chamar a API pelo navegador (CORS).
+# Em produção, prefira sobrescrever pela variável de ambiente
+# APP_CORS_ALLOWED_ORIGINS=https://eduhatcs.github.io
+app:
+  cors:
+    allowed-origins:
+      - http://localhost:5173
+      - http://localhost:4173
+      - https://eduhatcs.github.io
 
 # Reservado para o módulo de indicadores/dashboard (RF08-RF11, RN04),
 # que não faz parte deste entregável (cadastros + montagem de roteiro).
